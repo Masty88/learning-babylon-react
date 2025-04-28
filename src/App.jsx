@@ -15,16 +15,16 @@ const App = () => {
     setEngineState(engine);
     console.log('Scene is ready');
 
-    // const camera = new ArcRotateCamera(
-    //   'camera',
-    //   Math.PI / 2,
-    //   Math.PI / 2,
-    //   2,
-    //   new Vector3(0, 5, -20),
-    //   scene
-    // );
-    // camera.setTarget(Vector3.Zero());
-    // camera.attachControl(scene.getEngine().getRenderingCanvas(), true);
+    const camera = new ArcRotateCamera(
+      'camera',
+      Math.PI / 2,
+      Math.PI / 2,
+      2,
+      new Vector3(0, 5, -20),
+      scene
+    );
+    camera.setTarget(Vector3.Zero());
+    camera.attachControl(scene.getEngine().getRenderingCanvas(), true);
 
   }, []);
 
