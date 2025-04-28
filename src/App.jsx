@@ -16,7 +16,7 @@ const App = () => {
     console.log('Scene is ready');
 
     const camera = new ArcRotateCamera(
-      'camera',
+      'transitional-camera',
       Math.PI / 2,
       Math.PI / 2,
       2,
