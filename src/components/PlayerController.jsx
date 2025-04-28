@@ -34,7 +34,7 @@ export const PlayerController = ({input})=>{
    useEffect(()=>{
     if(!scene || !playerRef.current) return;
     console.log("PlayerController: scene is ready");
-    
+
     const updatePlayerMovement = () => {
         const { horizontal, vertical } = input || { horizontal: 0, vertical: 0 };
 
