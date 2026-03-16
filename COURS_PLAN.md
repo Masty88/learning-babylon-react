@@ -1,4 +1,4 @@
-# Cours Babylon.js + React — Plan de cours
+**Cours Babylon.js + React — Plan de cours**
 
 > **Point de départ :** repo Vite + React avec `node_modules` déjà installé.
 > Les fichiers `index.html` et `src/main.jsx` existent déjà (template Vite de base).
@@ -6,14 +6,14 @@
 
 ---
 
-## INTRODUCTION — Architecture et concepts clés
+# INTRODUCTION — Architecture et concepts clés
 
 > **🇫🇷 À expliquer :**
 > "Avant d'écrire la moindre ligne de code, on doit comprendre ce qu'on va construire
 > et comment les deux technologies vont collaborer. React et Babylon.js ont des rôles
 > très différents — les confondre, c'est la source de tous les bugs de ce type de projet."
 
-### Deux mondes qui coexistent
+# Deux mondes qui coexistent
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -39,7 +39,7 @@ Les `useEffect` sont le pont entre les deux.
 
 ---
 
-### Architecture des composants
+# Architecture des composants
 
 ```
 index.html
@@ -73,7 +73,7 @@ InputController  →  onInputUpdated()
 
 ---
 
-### Pattern de communication entre composants
+# Pattern de communication entre composants
 
 > **🇫🇷 À expliquer :**
 > "Dans ce projet on utilise 3 façons de faire communiquer les composants.
@@ -81,7 +81,7 @@ InputController  →  onInputUpdated()
 
 ---
 
-#### Pattern 1 — Props descendantes *(parent → enfant)*
+# Pattern 1 — Props descendantes *(parent → enfant)*
 
 Le parent passe des données à l'enfant via les attributs JSX.
 C'est le flux normal de React.
@@ -94,7 +94,7 @@ Shell  ──(playerMesh)─────▶  CameraController
 
 ---
 
-#### Pattern 2 — Callback props *(enfant → parent)*
+# Pattern 2 — Callback props *(enfant → parent)*
 
 Le parent passe une **fonction** à l'enfant.
 L'enfant l'appelle quand un événement se produit.
@@ -118,7 +118,7 @@ Shell  ──(onInputUpdated)───▶  InputController
 
 ---
 
-#### Pattern 3 — Context *(broadcast à tous les descendants)*
+# Pattern 3 — Context *(broadcast à tous les descendants)*
 
 Un composant "fournisseur" (`Provider`) publie des valeurs.
 N'importe quel descendant peut les lire avec `useContext`, sans passer par les props intermédiaires.
@@ -137,7 +137,7 @@ GameObject (Provider)  ──── publie { scene, engine }
 
 ---
 
-## ÉTAPE 1 — Le canvas Babylon.js : SceneComponent + App.css
+# ÉTAPE 1 — Le canvas Babylon.js : SceneComponent + App.css
 
 > **🇫🇷 À expliquer :**
 > "Babylon.js a besoin d'un élément `<canvas>` HTML pour dessiner en 3D.
@@ -147,7 +147,7 @@ GameObject (Provider)  ──── publie { scene, engine }
 > `onSceneReady` (quand la scène est prête) et `onRender` (à chaque frame).
 > C'est le seul fichier qui touche directement au DOM — tout le reste passe par Babylon."
 
-### `src/App.css`
+# `src/App.css`
 
 ```css
 * {
@@ -194,7 +194,7 @@ canvas {
 >
 > ⚠️ **Piège :** oublier le cleanup → les listeners s'accumulent à chaque render → bugs.
 
-### `src/components/SceneComponent.jsx`
+# `src/components/SceneComponent.jsx`
 
 ```jsx
 import { Engine, Scene } from '@babylonjs/core'
@@ -258,7 +258,7 @@ export const SceneComponent = (props) => {
 
 ---
 
-## ÉTAPE 2 — App.jsx : monter la scène
+# ÉTAPE 2 — App.jsx : monter la scène
 
 > **🪝 Hooks introduits ici pour la première fois : `useState` et `useCallback`**
 >
@@ -287,7 +287,7 @@ export const SceneComponent = (props) => {
 > Le concept clé ici : `useCallback` pour que les fonctions ne soient pas recréées à chaque render,
 > ce qui éviterait de redémarrer le moteur Babylon en boucle."
 
-### `src/App.jsx`
+# `src/App.jsx`
 
 ```jsx
 import React, { useState, useCallback } from 'react';
@@ -345,7 +345,7 @@ export default App;
 
 ---
 
-## ÉTAPE 3 — GameObjectContext : partager la scène entre les composants
+# ÉTAPE 3 — GameObjectContext : partager la scène entre les composants
 
 > **🇫🇷 À expliquer :**
 > "On a un problème classique en React : comment partager la scène Babylon entre plusieurs composants
@@ -357,7 +357,7 @@ export default App;
 > à chaque frame sans recréer ses propres listeners.
 > C'est le pattern 'game loop dans React'."
 
-### `src/contexts/GameObjectContext.jsx`
+# `src/contexts/GameObjectContext.jsx`
 
 ```jsx
 import React from 'react';
@@ -409,7 +409,7 @@ export { GameObjectContext, GameObject };
 
 ---
 
-## ÉTAPE 4 — Shell : l'orchestrateur
+# ÉTAPE 4 — Shell : l'orchestrateur
 
 > **🇫🇷 À expliquer :**
 > "Shell est le chef d'orchestre de notre jeu.
@@ -420,7 +420,7 @@ export { GameObjectContext, GameObject };
 > - `playerMesh` : la référence au mesh du joueur (nécessaire pour la caméra)
 > - `input` : les valeurs de clavier (nécessaire pour le mouvement du joueur)"
 
-### `src/components/Shell.jsx` *(version minimale)*
+# `src/components/Shell.jsx` *(version minimale)*
 
 ```jsx
 import React, { useState } from 'react';
@@ -439,7 +439,7 @@ export const Shell = ({ scene, engine }) => {
 
 ---
 
-## ÉTAPE 5 — EnvironmentController : le sol et la lumière
+# ÉTAPE 5 — EnvironmentController : le sol et la lumière
 
 > **🪝 Hook introduit ici pour la première fois : `useContext`**
 >
@@ -462,7 +462,7 @@ export const Shell = ({ scene, engine }) => {
 > Important : `checkCollisions = true` sur le sol — le joueur ne tombera pas à travers.
 > Ce composant retourne `null` — pas de rendu React, seulement des effets Babylon."
 
-### `src/components/EnvironnementController.jsx`
+# `src/components/EnvironnementController.jsx`
 
 ```jsx
 import React, { useEffect, useContext } from 'react';
@@ -488,7 +488,7 @@ export const EnvironmentController = () => {
 }
 ```
 
-### Mettre à jour `Shell.jsx`
+# Mettre à jour `Shell.jsx`
 
 ```jsx
 import React, { useState } from 'react';
@@ -508,7 +508,7 @@ export const Shell = ({ scene, engine }) => {
 
 ---
 
-## ÉTAPE 6 — Les constantes du jeu
+# ÉTAPE 6 — Les constantes du jeu
 
 > **🇫🇷 À expliquer :**
 > "Bonne pratique : on sort toutes les valeurs 'magiques' dans un fichier de constantes.
@@ -516,7 +516,7 @@ export const Shell = ({ scene, engine }) => {
 > La gravité, la vitesse, la force de saut — ce sont des paramètres de game design,
 > pas de la logique, donc ils méritent leur propre fichier."
 
-### `src/settings/const.js`
+# `src/settings/const.js`
 
 ```js
 export const GRAVITY = -5.81;          // accélération de gravité en m/s²
@@ -527,7 +527,7 @@ export const PLAYER_JUMP_FORCE = 0.5;  // force de saut en m/s²
 
 ---
 
-## ÉTAPE 7 — PlayerController : le joueur
+# ÉTAPE 7 — PlayerController : le joueur
 
 > **🪝 `useRef` — second usage : stocker des données haute fréquence (60fps)**
 >
@@ -558,7 +558,7 @@ export const PLAYER_JUMP_FORCE = 0.5;  // force de saut en m/s²
 > On appelle `onPlayerCreated` pour informer Shell que le mesh est prêt — Shell pourra
 > alors activer la caméra de suivi."
 
-### `src/components/PlayerController.jsx`
+# `src/components/PlayerController.jsx`
 
 ```jsx
 import React, { useEffect, useRef, useContext, useState } from 'react';
@@ -650,7 +650,7 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
 }
 ```
 
-### Mettre à jour `Shell.jsx`
+# Mettre à jour `Shell.jsx`
 
 ```jsx
 import React, { useState } from 'react';
@@ -680,7 +680,7 @@ export const Shell = ({ scene, engine }) => {
 
 ---
 
-## ÉTAPE 8 — CameraController : la caméra de suivi
+# ÉTAPE 8 — CameraController : la caméra de suivi
 
 > **🇫🇷 À expliquer :**
 > "On va remplacer la `ArcRotateCamera` temporaire par une `FollowCamera`.
@@ -691,7 +691,7 @@ export const Shell = ({ scene, engine }) => {
 > Ce composant ne s'active que quand `playerMesh` existe (voir Shell) —
 > on ne peut pas suivre quelque chose qui n'existe pas encore."
 
-### `src/components/CameraController.jsx`
+# `src/components/CameraController.jsx`
 
 ```jsx
 import { useContext, useEffect } from 'react';
@@ -730,7 +730,7 @@ export const CameraController = ({ playerMesh }) => {
 }
 ```
 
-### Mettre à jour `Shell.jsx`
+# Mettre à jour `Shell.jsx`
 
 ```jsx
 import React, { useState } from 'react';
@@ -761,7 +761,7 @@ export const Shell = ({ scene, engine }) => {
 
 ---
 
-## ÉTAPE 9 — InputController : le clavier
+# ÉTAPE 9 — InputController : le clavier
 
 > **🇫🇷 À expliquer :**
 > "Dernière pièce du puzzle : capter les touches du clavier et les transformer en valeurs de jeu.
@@ -775,7 +775,7 @@ export const Shell = ({ scene, engine }) => {
 > Ces valeurs sont passées à `onInputUpdated` → Shell → PlayerController.
 > Touches supportées : flèches directionnelles et WASD + Espace pour sauter."
 
-### `src/components/InputController.jsx`
+# `src/components/InputController.jsx`
 
 ```jsx
 import React, { useEffect, useState, useContext } from 'react';
@@ -837,7 +837,7 @@ export const InputController = ({ onInputUpdated }) => {
 
 ---
 
-## ÉTAPE 10 — Shell final : tout connecter
+# ÉTAPE 10 — Shell final : tout connecter
 
 > **🇫🇷 À expliquer :**
 > "Dernière étape : on connecte l'InputController au Shell.
@@ -847,7 +847,7 @@ export const InputController = ({ onInputUpdated }) => {
 > On remarque que Shell ne contient presque pas de logique — il orchestre.
 > Chaque contrôleur a une responsabilité unique (Single Responsibility Principle)."
 
-### `src/components/Shell.jsx` *(version finale)*
+# `src/components/Shell.jsx` *(version finale)*
 
 ```jsx
 import React, { useState } from 'react';
@@ -890,7 +890,7 @@ export const Shell = ({ scene, engine }) => {
 
 ---
 
-## Récapitulatif — Flux de données
+# Récapitulatif — Flux de données
 
 ```
 index.html
@@ -905,7 +905,7 @@ index.html
                           └── InputController  ──── clavier → input → Shell → Player
 ```
 
-## Fichiers créés dans l'ordre
+# Fichiers créés dans l'ordre
 
 | # | Fichier | Ce que ça fait |
 |---|---------|----------------|

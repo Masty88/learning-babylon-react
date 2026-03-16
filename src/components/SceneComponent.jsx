@@ -30,7 +30,6 @@ export const SceneComponent = (props) => {
       scene.onReadyObservable.addOnce(onSceneReady)
     }
     engine.runRenderLoop(() => {
-      onRender(scene)
       scene.render()
     })
     const resize = () => {
@@ -50,7 +49,6 @@ export const SceneComponent = (props) => {
     engineOptions,
     adaptToDeviceRatio,
     sceneOptions,
-    onRender,
     onSceneReady,
   ])
   return <canvas id={canvasId} ref={reactCanvas} {...rest} />
