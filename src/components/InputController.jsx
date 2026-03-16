@@ -1,6 +1,6 @@
-import {useState} from 'react'
+import {useState, useContext, useEffect} from 'react'
 import {Scalar} from '@babylonjs/core';
-import { GameObject } from '../contexts/GameObjectContext';
+import { GameObjectContext } from '../contexts/GameObjectContext';
 
 
 export const InputController = ({ onInputUpdated }) => {
@@ -53,6 +53,4 @@ export const InputController = ({ onInputUpdated }) => {
   }, [scene, keys]);
 
   return null;
-}
-
 }

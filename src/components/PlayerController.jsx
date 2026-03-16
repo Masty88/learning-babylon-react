@@ -11,6 +11,10 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
 
   // EFFET 1 : création du mesh (une seule fois)
   useEffect(() => {
+    if (!scene) return;
+
+    scene.collisionsEnabled = true;
+
     const player = MeshBuilder.CreateSphere("player", { diameter: 2 }, scene);
     player.position = new Vector3(0, 500, 0);
 
@@ -19,6 +23,7 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
     player.material = playerMaterial;
 
     player.checkCollisions = true;
+    player.ellipsoid = new Vector3(1, 1, 1);
 
     // TransformNode enfant pour indiquer la direction du joueur
     const node = new TransformNode("playerNode", scene);
@@ -47,7 +52,7 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
         playerRef.current.rotation.y += horizontal * ROTATION_SPEED;
       }
 
-      // Mouvement avant/arrière
+      // Mouvement avant/arrière — merged into velocityRef
       if (vertical !== 0) {
         const frontVector = new Vector3(
           Math.sin(playerRef.current.rotation.y),
@@ -55,7 +60,11 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
           Math.cos(playerRef.current.rotation.y)
         );
         const moveDirection = frontVector.scale(vertical * PLAYER_SPEED);
-        playerRef.current.position.addInPlace(moveDirection);
+        velocityRef.current.x = moveDirection.x;
+        velocityRef.current.z = moveDirection.z;
+      } else {
+        velocityRef.current.x = 0;
+        velocityRef.current.z = 0;
       }
 
       // Détection de chute
@@ -73,7 +82,7 @@ export const PlayerController = ({ input, onPlayerCreated }) => {
       const newVelocityY = velocityRef.current.y + GRAVITY * deltaTime;
       velocityRef.current.y = Scalar.Lerp(velocityRef.current.y, newVelocityY, 0.1);
 
-      // Déplacement avec collisions
+      // Déplacement avec collisions (horizontal + gravité en un seul appel)
       playerRef.current.moveWithCollisions(velocityRef.current);
     };
 
